@@ -1,4 +1,4 @@
- name: Flutter Build APK
+name: Flutter Build APK
 
 on:
   push:
@@ -24,9 +24,7 @@ jobs:
         channel: 'stable'
 
     - name: Re-create Missing Android Files
-      run: |
-        # ফাইল স্ট্রাকচার ফিক্স এবং অ্যান্ড্রয়েড প্রজেক্ট নতুন করে জেনারেট করার জন্য
-        flutter create . --platforms=android
+      run: flutter create . --platforms=android
 
     - name: Install Dependencies
       run: flutter pub get
@@ -39,4 +37,4 @@ jobs:
       with:
         name: release-apk
         path: build/app/outputs/flutter-apk/app-release.apk
-       
+        
