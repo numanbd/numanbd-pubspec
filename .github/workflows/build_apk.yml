@@ -24,13 +24,20 @@ jobs:
         channel: 'stable'
 
     - name: Re-create Missing Android Files
-      run: flutter create . --platforms=android
+      run: |
+        flutter create . --platforms=android
+        
+        # এখানে compileSdk এবং targetSdk সংস্করণ ৩৬-এ আপডেট করা হচ্ছে যেন এররটি না আসে
+        sed -i 's/compileSdk = .*/compileSdk = 36/g' android/app/build.gradle
+        sed -i 's/targetSdk = .*/targetSdk = 36/g' android/app/build.gradle
+        sed -i 's/compileSdkVersion .*/compileSdkVersion 36/g' android/app/build.gradle
+        sed -i 's/targetSdkVersion .*/targetSdkVersion 36/g' android/app/build.gradle
 
     - name: Install Dependencies
       run: flutter pub get
 
     - name: Build APK
-      run: flutter build apk --split-per-abi
+      run: flutter build apk --split-per-abi --no-tree-shake-icons
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
