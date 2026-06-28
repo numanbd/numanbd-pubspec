@@ -27,9 +27,21 @@ jobs:
       run: |
         flutter create . --platforms=android
         
-        # নতুন .kts ফাইলের জন্য compileSdk এবং targetSdk সংস্করণ ৩৬-এ জোরপূর্বক পরিবর্তন করা হচ্ছে
-        sed -i 's/compileSdk = .*/compileSdk = 36/g' android/app/build.gradle.kts
-        sed -i 's/targetSdk = .*/targetSdk = 36/g' android/app/build.gradle.kts
+        # সব সাব-প্লাগইন ও প্যাকেজের compileSdk এবং targetSdk সংস্করণ ৩৬ করার জন্য স্ক্রিপ্ট
+        cat << 'EOF' >> android/build.gradle.kts
+        subprojects {
+            afterEvaluate {
+                if (hasProperty("android")) {
+                    extensions.configure<com.android.build.gradle.BaseExtension> {
+                        compileSdkVersion(36)
+                        defaultConfig {
+                            targetSdkVersion(36)
+                        }
+                    }
+                }
+            }
+        }
+        EOF
 
     - name: Install Dependencies
       run: flutter pub get
